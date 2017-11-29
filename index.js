@@ -103,3 +103,7 @@ function mergeByProperty(arr1, arr2, prop) {
         arr1obj ? Object.assign(arr1obj, arr2obj) : arr1.push(arr2obj);
     });
 }
+
+if (!JSON.parse) {
+    JSON.parse = JSON.Parse;
+}
