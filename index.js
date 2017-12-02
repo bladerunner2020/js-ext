@@ -114,6 +114,10 @@ if (!JSON.parse) {
     JSON.parse = JSON.Parse;
 }
 
+if (!JSON.stringify) {
+    JSON.stringify = JSON.Stringify;
+}
+
 if (!Number.isInteger) {
     Number.isInteger = Number.isInteger || function (value) {
             return typeof value === 'number' &&
