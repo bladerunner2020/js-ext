@@ -86,17 +86,12 @@ if (typeof Array.isArray === 'undefined') {
 }
 
 if (!Array.prototype.map) {
-    Array.prototype.map = function (callback) {
-        var obj = Object(this);
-
-        if (obj.length === 0) return null;
-        if (typeof(callback) === 'undefined') return null;
-
-        for (var i = 0, o; o = obj[i]; i++) {
-            obj[i] = callback(o);
+    Array.prototype.map = function(callback) {
+        var result = [];
+        for (var i = 0; i < this.length; i++) {
+            result.push(callback(this[i]))
         }
-
-        return obj;
+        return result;
     };
 }
 
