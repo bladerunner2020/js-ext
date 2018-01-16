@@ -133,3 +133,83 @@ if (!Number.isInteger) {
                 Math.floor(value) === value;
         };
 }
+
+// https://github.com/Raynos/function-bind
+
+
+'use strict';
+
+if (!Function.prototype.bind) {
+
+    var ERROR_MESSAGE = 'Function.prototype.bind called on incompatible ';
+    var slice = Array.prototype.slice;
+    var toStr = Object.prototype.toString;
+    var funcType = '[object Function]';
+
+    Function.prototype.bind = function (that) {
+        var target = this;
+        if (typeof target !== 'function' || toStr.call(target) !== funcType) {
+            throw new TypeError(ERROR_MESSAGE + target);
+        }
+        var args = slice.call(arguments, 1);
+
+        var bound;
+        var binder = function () {
+            if (this instanceof bound) {
+                var result = target.apply(
+                    this,
+                    args.concat(slice.call(arguments))
+                );
+                if (Object(result) === result) {
+                    return result;
+                }
+                return this;
+            } else {
+                return target.apply(
+                    that,
+                    args.concat(slice.call(arguments))
+                );
+            }
+        };
+
+        var boundLength = Math.max(0, target.length - args.length);
+        var boundArgs = [];
+        for (var i = 0; i < boundLength; i++) {
+            boundArgs.push('$' + i);
+        }
+
+        bound = Function('binder', 'return function (' + boundArgs.join(',') + '){ return binder.apply(this,arguments); }')(binder);
+
+        if (target.prototype) {
+            var Empty = function Empty() {
+            };
+            Empty.prototype = target.prototype;
+            bound.prototype = new Empty();
+            Empty.prototype = null;
+        }
+
+        return bound;
+    };
+}
+
+var _old_slice = Array.prototype.slice;
+Array.prototype.slice = function() {
+    return arguments.length? _old_slice.apply(this, arguments) : _old_slice.apply(this, [0]);
+};
+
+function setTimeout(cb, timeout){
+    return IR.SetTimeout(timeout, cb);
+}
+
+function clearTimeout(timer) {
+    return IR.ClearTimeout(timer);
+}
+
+function setInterval(cb, interval) {
+    return IR.SetInterval(interval, cb);
+}
+
+function clearInterval(timer) {
+    return IR.ClearInterval(timer);
+}
+
