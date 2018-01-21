@@ -1,3 +1,106 @@
+if (IR) {
+    var _old_slice = Array.prototype.slice;
+    Array.prototype.slice = function () {
+        return arguments.length ? _old_slice.apply(this, arguments) : _old_slice.apply(this, [0]);
+    };
+
+    setTimeout = function(cb, timeout){
+        return IR.SetTimeout(timeout, cb);
+    };
+
+    clearTimeout = function(timer) {
+        return IR.ClearTimeout(timer);
+    };
+
+    setInterval = function(cb, interval) {
+        return IR.SetInterval(interval, cb);
+    };
+
+    clearInterval = function(timer) {
+        return IR.ClearInterval(timer);
+    };
+}
+
+// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toISOString
+if (!Date.prototype.toISOString) {
+    (function() {
+
+        function pad(number) {
+            if (number < 10) {
+                return '0' + number;
+            }
+            return number;
+        }
+
+        Date.prototype.toISOString = function() {
+            return this.getUTCFullYear() +
+                '-' + pad(this.getUTCMonth() + 1) +
+                '-' + pad(this.getUTCDate()) +
+                'T' + pad(this.getUTCHours()) +
+                ':' + pad(this.getUTCMinutes()) +
+                ':' + pad(this.getUTCSeconds()) +
+                '.' + (this.getUTCMilliseconds() / 1000).toFixed(3).slice(2, 5) +
+                'Z';
+        };
+
+    }());
+}
+
+// https://stackoverflow.com/questions/5802461/javascript-which-browsers-support-parsing-of-iso-8601-date-string-with-date-par
+(function() {
+    var d = Date,
+        regexIso8601 = /^(\d{4}|\+\d{6})(?:-(\d{2})(?:-(\d{2})(?:T(\d{2}):(\d{2}):(\d{2})\.(\d{1,})(Z|([\-+])(\d{2}):(\d{2}))?)?)?)?$/,
+        lOff, lHrs, lMin;
+
+    if (d.parse('2011-11-29T15:52:30.5') !== 1322599950500 ||
+        d.parse('2011-11-29T15:52:30.52') !== 1322599950520 ||
+        d.parse('2011-11-29T15:52:18.867') !== 1322599938867 ||
+        d.parse('2011-11-29T15:52:18.867Z') !== 1322581938867 ||
+        d.parse('2011-11-29T15:52:18.867-03:30') !== 1322594538867 ||
+        d.parse('2011-11-29') !== 1322524800000 ||
+        d.parse('2011-11') !== 1320105600000 ||
+        d.parse('2011') !== 1293840000000) {
+
+        d.__parse = d.parse;
+
+        lOff = -(new Date().getTimezoneOffset());
+        lHrs = Math.floor(lOff / 60);
+        lMin = lOff % 60;
+
+        d.parse = function(v) {
+
+            var m = regexIso8601.exec(v);
+
+            if (m) {
+                return Date.UTC(
+                    m[1],
+                    (m[2] || 1) - 1,
+                    m[3] || 1,
+                    m[4] - (m[8] ? m[9] ? m[9] + m[10] : 0 : lHrs) || 0,
+                    m[5] - (m[8] ? m[9] ? m[9] + m[11] : 0 : lMin) || 0,
+                    m[6] || 0,
+                    ((m[7] || 0) + '00').substr(0, 3)
+                );
+            }
+
+            return d.__parse.apply(this, arguments);
+
+        };
+    }
+
+    d.__fromString = d.fromString;
+
+    d.fromString = function(v) {
+
+        if (!d.__fromString || regexIso8601.test(v)) {
+            return new d(d.parse(v));
+        }
+
+        return d.__fromString.apply(this, arguments);
+    };
+
+})();
+
 // Шаги алгоритма ECMA-262, 5-е издание, 15.4.4.14
 // Ссылка (en): http://es5.github.io/#x15.4.4.14
 // Ссылка (ru): http://es5.javascript.ru/x15.4.html#x15.4.4.14
@@ -158,7 +261,7 @@ if (!Function.prototype.bind) {
             if (this instanceof bound) {
                 var result = target.apply(
                     this,
-                    args.concat(slice.call(arguments))
+                    args.concat(slice.call(arguments, 0))
                 );
                 if (Object(result) === result) {
                     return result;
@@ -167,7 +270,7 @@ if (!Function.prototype.bind) {
             } else {
                 return target.apply(
                     that,
-                    args.concat(slice.call(arguments))
+                    args.concat(slice.call(arguments, 0))
                 );
             }
         };
@@ -192,24 +295,46 @@ if (!Function.prototype.bind) {
     };
 }
 
-var _old_slice = Array.prototype.slice;
-Array.prototype.slice = function() {
-    return arguments.length? _old_slice.apply(this, arguments) : _old_slice.apply(this, [0]);
-};
+// From https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/keys
+if (!Object.keys) {
+    Object.keys = (function() {
+        'use strict';
+        var hasOwnProperty = Object.prototype.hasOwnProperty,
+            hasDontEnumBug = !({ toString: null }).propertyIsEnumerable('toString'),
+            dontEnums = [
+                'toString',
+                'toLocaleString',
+                'valueOf',
+                'hasOwnProperty',
+                'isPrototypeOf',
+                'propertyIsEnumerable',
+                'constructor'
+            ],
+            dontEnumsLength = dontEnums.length;
 
-function setTimeout(cb, timeout){
-    return IR.SetTimeout(timeout, cb);
+        return function(obj) {
+            if (typeof obj !== 'function' && (typeof obj !== 'object' || obj === null)) {
+                throw new TypeError('Object.keys called on non-object');
+            }
+
+            var result = [], prop, i;
+
+            for (prop in obj) {
+                if (hasOwnProperty.call(obj, prop)) {
+                    result.push(prop);
+                }
+            }
+
+            if (hasDontEnumBug) {
+                for (i = 0; i < dontEnumsLength; i++) {
+                    if (hasOwnProperty.call(obj, dontEnums[i])) {
+                        result.push(dontEnums[i]);
+                    }
+                }
+            }
+            return result;
+        };
+    }());
 }
 
-function clearTimeout(timer) {
-    return IR.ClearTimeout(timer);
-}
-
-function setInterval(cb, interval) {
-    return IR.SetInterval(interval, cb);
-}
-
-function clearInterval(timer) {
-    return IR.ClearInterval(timer);
-}
 
