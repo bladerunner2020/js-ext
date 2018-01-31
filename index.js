@@ -1,4 +1,19 @@
 if (IR) {
+    if (typeof module !== 'object') {
+        module = {};
+        exports = {};
+        module.exports = {};
+    }
+    
+    
+    if (typeof require == 'undefined') {
+        require = function(name) {
+            return module[name] ? module[name] : module.exports;
+        }
+    }
+
+
+
     var _old_slice = Array.prototype.slice;
     Array.prototype.slice = function () {
         return arguments.length ? _old_slice.apply(this, arguments) : _old_slice.apply(this, [0]);
