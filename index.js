@@ -407,4 +407,17 @@ if (!Object.keys) {
     }());
 }
 
+if (typeof module !== 'object') {
+    module = {};
+    exports = {};
+    module.exports = {};
+}
+
+
+if (typeof require == 'undefined') {
+    require = function(name) {
+        return module[name] ? module[name] : module.exports;
+
+    }
+}
 
