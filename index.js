@@ -19,16 +19,40 @@ if (IR) {
         return arguments.length ? _old_slice.apply(this, arguments) : _old_slice.apply(this, [0]);
     };
 
-    setTimeout = function(cb, timeout){
-        return IR.SetTimeout(timeout, cb);
+    var setTimeout = function(cb, timeout){
+        var timer = 0;
+
+        try {
+            timer = IR.SetTimeout(timeout, cb);
+        } catch (e) {
+            if (_Error) {
+                _Error('CRITICAL ERROR - setTimeout failed: '  + e.message);
+            } else {
+                throw e;
+            }
+        }
+
+        return timer;
     };
 
-    clearTimeout = function(timer) {
+    var clearTimeout = function(timer) {
         return IR.ClearTimeout(timer);
     };
 
-    setInterval = function(cb, interval) {
-        return IR.SetInterval(interval, cb);
+    var setInterval = function(cb, interval) {
+        var timer = 0;
+
+        try {
+            timer = IR.SetInterval(interval, cb);
+        } catch (e) {
+            if (_Error) {
+                _Error('CRITICAL ERROR - setInterval failed: '  + e.message);
+            } else {
+                throw e;
+            }
+        }
+
+        return timer;
     };
 
     clearInterval = function(timer) {
