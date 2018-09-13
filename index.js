@@ -8,7 +8,13 @@ if (IR) {
     
     if (typeof require == 'undefined') {
         require = function(name) {
-            return module[name] ? module[name] : module.exports;
+            var res = module[name] ? module[name] : null;
+            
+            if (res &&  res.moduleInitializer) {
+                res = res.moduleInitializer();
+            }
+            
+            return res;
         }
     }
 
