@@ -1,3 +1,5 @@
+// js-ext.js
+
 if (IR) {
     if (typeof module !== 'object') {
         module = {};
@@ -322,7 +324,44 @@ function mergeByProperty(arr1, arr2, prop) {
 }
 
 if (!JSON.parse) {
-    JSON.parse = JSON.Parse;
+    JSON.parse = function (s) {
+        function makeUpReplaceStr(str, symbol) {
+            var replacement = '!' + symbol;
+
+            while (str.indexOf(replacement) != -1) {
+                replacement = '!' + replacement;
+            }
+
+            return replacement;
+        }
+
+        function replaceCRLF(obj, rCR, rLF) {
+            for (var n in obj) {
+                if (obj.hasOwnProperty(n)) {
+                    var property = obj[n];
+
+                    if (typeof property == 'string') {
+                        var re1 = new RegExp(rCR, 'g');
+                        var re2 = new RegExp(rLF, 'g');
+                        obj[n] = property.replace(re1, '\r').replace(re2, '\n');
+                    } else if (typeof property == 'object') {
+                        replaceCRLF(property, rCR, rLF);
+                    }
+                }
+            }
+        }
+
+
+        var rCR = makeUpReplaceStr(s, 'r');
+        var rLF = makeUpReplaceStr(s, 'n');
+
+        var newStr = s.replace(/\r/g, rCR);
+        newStr = newStr.replace(/\n/g, rLF);
+
+        var obj = JSON.Parse(newStr);
+        replaceCRLF(obj, rCR, rLF);
+        return obj;
+    };
 }
 
 if (!JSON.stringify) {
