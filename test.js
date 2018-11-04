@@ -1,1 +1,0 @@
-require('../../iridium/js-ext');

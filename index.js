@@ -7,7 +7,6 @@ if (IR) {
         module.exports = {};
     }
     
-    
     if (typeof require == 'undefined') {
         require = function(name) {
             var res = module[name] ? module[name] : null;
@@ -19,9 +18,9 @@ if (IR) {
             return res;
         }
     }
+    
 
-
-
+    // В iRidium не корректно работает slice без аргументов
     var _old_slice = Array.prototype.slice;
     Array.prototype.slice = function () {
         return arguments.length ? _old_slice.apply(this, arguments) : _old_slice.apply(this, [0]);
@@ -66,26 +65,15 @@ if (IR) {
     clearInterval = function(timer) {
         return IR.ClearInterval(timer);
     };
+
+
+    // Если в коде встерчается где-нибудь console.log
+    if (!console) {
+        var console = {};
+        console.log = IR.Log;
+    }
 }
 
-if (typeof Object.create !== "function") {
-    Object.create = function (proto, propertiesObject) {
-        if (typeof proto !== 'object' && typeof proto !== 'function') {
-            throw new TypeError('Object prototype may only be an Object: ' + proto);
-        } else if (proto === null) {
-            throw new Error("This browser's implementation of Object.create is a shim and doesn't support 'null' as the first argument.");
-        }
-
-        if (typeof propertiesObject != 'undefined') {
-            throw new Error("This browser's implementation of Object.create is a shim and doesn't support a second argument.");
-        }
-
-        function F() {}
-        F.prototype = proto;
-
-        return new F();
-    };
-}
 
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toISOString
 if (!Date.prototype.toISOString) {
@@ -542,45 +530,23 @@ if (!Object.keys) {
     }());
 }
 
-if (!Object.keys) {
-    Object.keys = (function() {
-        'use strict';
-        var hasOwnProperty = Object.prototype.hasOwnProperty,
-            hasDontEnumBug = !({ toString: null }).propertyIsEnumerable('toString'),
-            dontEnums = [
-                'toString',
-                'toLocaleString',
-                'valueOf',
-                'hasOwnProperty',
-                'isPrototypeOf',
-                'propertyIsEnumerable',
-                'constructor'
-            ],
-            dontEnumsLength = dontEnums.length;
+if (typeof Object.create !== "function") {
+    Object.create = function (proto, propertiesObject) {
+        if (typeof proto !== 'object' && typeof proto !== 'function') {
+            throw new TypeError('Object prototype may only be an Object: ' + proto);
+        } else if (proto === null) {
+            throw new Error("This browser's implementation of Object.create is a shim and doesn't support 'null' as the first argument.");
+        }
 
-        return function(obj) {
-            if (typeof obj !== 'function' && (typeof obj !== 'object' || obj === null)) {
-                throw new TypeError('Object.keys called on non-object');
-            }
+        if (typeof propertiesObject != 'undefined') {
+            throw new Error("This browser's implementation of Object.create is a shim and doesn't support a second argument.");
+        }
 
-            var result = [], prop, i;
+        function F() {}
+        F.prototype = proto;
 
-            for (prop in obj) {
-                if (hasOwnProperty.call(obj, prop)) {
-                    result.push(prop);
-                }
-            }
-
-            if (hasDontEnumBug) {
-                for (i = 0; i < dontEnumsLength; i++) {
-                    if (hasOwnProperty.call(obj, dontEnums[i])) {
-                        result.push(dontEnums[i]);
-                    }
-                }
-            }
-            return result;
-        };
-    }());
+        return new F();
+    };
 }
 
 
