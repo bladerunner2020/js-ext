@@ -2,13 +2,12 @@
 
 if (IR) {
     if (typeof module !== 'object') {
-        module = {};
-        exports = {};
-        module.exports = {};
+        var module = {};
+        module.exports = {};  // Do we need this?
     }
     
     if (typeof require == 'undefined') {
-        require = function(name) {
+        var require = function(name) {
             var res = module[name] ? module[name] : null;
             
             if (res &&  res.moduleInitializer) {
@@ -548,21 +547,3 @@ if (typeof Object.create !== "function") {
         return new F();
     };
 }
-
-
-if (typeof module !== 'object') {
-    module = {};
-    exports = {};
-    module.exports = {};
-}
-
-
-if (typeof require == 'undefined') {
-    require = function(name) {
-        return module[name] ? module[name] : module.exports;
-
-    }
-}
-
-
-
