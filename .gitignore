@@ -43,6 +43,7 @@ jspm_packages
 
 # User-specific stuff:
 .idea/**
+.idea/modules.xml
 .idea/workspace.xml
 .idea/tasks.xml
 .idea/dictionaries
