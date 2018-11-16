@@ -28,12 +28,33 @@ if (IR) {
     var setTimeout = function(cb, timeout){
         var timer = 0;
 
+        if (typeof _DEBUGGER != 'undefined') {
+            if (!_DEBUGGER.setTimeoutCounter) {
+                _DEBUGGER.setTimeoutCounter = 0;
+            }
+        }
+
         try {
             timer = IR.SetTimeout(timeout, cb);
+            if (typeof _DEBUGGER != 'undefined') {
+                _DEBUGGER.setTimeoutCounter++;
+            }
         } catch (e) {
-            if (_Error) {
-                _Error('CRITICAL ERROR - setTimeout failed: '  + e.message);
+            var str = cb.toString();
+            var name = str.match(/function(.*)\(/);
+            name = name ? name.pop() : 'unknown';
+            name = name ? name.replace(' ', '') : 'unknown';
+            if (name == '') {
+                name = str.match(/\/\*(.*)\*\//);
+                name = name ? name = name.pop() : null;
+                name = name ? '/*' + name + '*/' : 'unknown';
+            }
+
+            var counterStr = typeof _DEBUGGER != 'undefined' ? '(' + _DEBUGGER.setTimeoutCounter + ')' : '';
+            if (typeof _Error != 'undefined') {
+                _Error('CRITICAL ERROR - setTimeout(' + name + ', ' + timeout + ') failed ' + counterStr + ': '  + e.message);
             } else {
+                e.message = 'setTimeout(' + name + ', ' + timeout + ') failed ' + counterStr + ': '  + e.message;
                 throw e;
             }
         }
@@ -48,15 +69,39 @@ if (IR) {
     var setInterval = function(cb, interval) {
         var timer = 0;
 
+        if (typeof _DEBUGGER != 'undefined') {
+            if (!_DEBUGGER.setIntervalCounter) {
+                _DEBUGGER.setIntervalCounter = 0;
+            }
+        }
+
         try {
             timer = IR.SetInterval(interval, cb);
+            if (typeof _DEBUGGER != 'undefined') {
+                _DEBUGGER.setIntervalCounter++;
+            }
         } catch (e) {
-            if (_Error) {
-                _Error('CRITICAL ERROR - setInterval failed: '  + e.message);
+            var str = cb.toString();
+            var name = str.match(/function(.*)\(/);
+            name = name ? name.pop() : 'unknown';
+            name = name ? name.replace(' ', '') : 'unknown';
+            if (name == '') {
+                name = str.match(/\/\*(.*)\*\//);
+                name = name ? name = name.pop() : null;
+                name = name ? '/*' + name + '*/' : 'unknown';
+            }
+
+            var counterStr = typeof _DEBUGGER != 'undefined' ? '(' + _DEBUGGER.setIntervalCounter + ')' : '';
+
+            if (typeof _Error != 'undefined') {
+                _Error('CRITICAL ERROR - setInterval(' + name + ', ' + interval + ') failed ' + counterStr + ': '  + e.message);
+
             } else {
+                e.message = 'setInterval(' + name + ', ' + interval + ') failed ' + counterStr + ': '  + e.message;
                 throw e;
             }
         }
+
 
         return timer;
     };
