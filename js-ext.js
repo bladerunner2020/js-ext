@@ -1,6 +1,7 @@
 // js-ext.js
+/* global IR, _DEBUGGER, _Error */
 
-if (IR) {
+if (typeof IR != 'undefined') {
     if (typeof module !== 'object') {
         var module = {};
         module.exports = {};  // Do we need this?
@@ -15,7 +16,7 @@ if (IR) {
             }
             
             return res;
-        }
+        };
     }
     
 
@@ -25,6 +26,7 @@ if (IR) {
         return arguments.length ? _old_slice.apply(this, arguments) : _old_slice.apply(this, [0]);
     };
 
+    // eslint-disable-next-line no-unused-vars
     var setTimeout = function(cb, timeout){
         var timer = 0;
 
@@ -62,10 +64,12 @@ if (IR) {
         return timer;
     };
 
+    // eslint-disable-next-line no-unused-vars
     var clearTimeout = function(timer) {
         return IR.ClearTimeout(timer);
     };
 
+    // eslint-disable-next-line no-unused-vars
     var setInterval = function(cb, interval) {
         var timer = 0;
 
@@ -106,7 +110,8 @@ if (IR) {
         return timer;
     };
 
-    clearInterval = function(timer) {
+    // eslint-disable-next-line no-unused-vars
+    var clearInterval = function(timer) {
         return IR.ClearInterval(timer);
     };
 
@@ -147,6 +152,7 @@ if (!Date.prototype.toISOString) {
 // https://stackoverflow.com/questions/5802461/javascript-which-browsers-support-parsing-of-iso-8601-date-string-with-date-par
 (function() {
     var d = Date,
+        // eslint-disable-next-line no-useless-escape
         regexIso8601 = /^(\d{4}|\+\d{6})(?:-(\d{2})(?:-(\d{2})(?:T(\d{2}):(\d{2}):(\d{2})\.?(\d{0,})(Z|([\-+])(\d{2}):(\d{2}))?)?)?)?$/,
         // regexIso8601 = /^(\d{4}|\+\d{6})(?:-(\d{2})(?:-(\d{2})(?:T(\d{2}):(\d{2}):(\d{2})\.(\d{1,})(Z|([\-+])(\d{2}):(\d{2}))?)?)?)?$/,
         lOff, lHrs, lMin;
@@ -350,14 +356,14 @@ if (!Array.prototype.forEach){
 if (typeof Array.isArray === 'undefined') {
     Array.isArray = function(obj) {
         return Object.prototype.toString.call(obj) === '[object Array]';
-    }
+    };
 }
 
 if (!Array.prototype.map) {
     Array.prototype.map = function(callback) {
         var result = [];
         for (var i = 0; i < this.length; i++) {
-            result.push(callback(this[i]))
+            result.push(callback(this[i]));
         }
         return result;
     };
@@ -401,16 +407,17 @@ if (!String.prototype.repeat) {
             rpt += str;
         }
         return rpt;
-    }
+    };
 }
 
 if (!Date.now) {
     Date.now = function() {
         var current = new Date();
         return current.getTime();
-    }
+    };
 }
 
+// eslint-disable-next-line no-unused-vars
 function mergeByProperty(arr1, arr2, prop) {
     arr2.forEach(function(arr2obj) {
         var arr1obj = arr1.find(function(arr1obj) {
@@ -468,10 +475,10 @@ if (!JSON.stringify) {
 
 if (!Number.isInteger) {
     Number.isInteger = Number.isInteger || function (value) {
-            return typeof value === 'number' &&
+        return typeof value === 'number' &&
                 isFinite(value) &&
                 Math.floor(value) === value;
-        };
+    };
 }
 
 // https://github.com/Raynos/function-bind
@@ -494,6 +501,9 @@ if (!Function.prototype.bind) {
         var args = slice.call(arguments, 1);
 
         var bound;
+        /**
+         * @this
+         */
         var binder = function () {
             if (this instanceof bound) {
                 var result = target.apply(
@@ -574,16 +584,16 @@ if (!Object.keys) {
     }());
 }
 
-if (typeof Object.create !== "function") {
+if (typeof Object.create !== 'function') {
     Object.create = function (proto, propertiesObject) {
         if (typeof proto !== 'object' && typeof proto !== 'function') {
             throw new TypeError('Object prototype may only be an Object: ' + proto);
         } else if (proto === null) {
-            throw new Error("This browser's implementation of Object.create is a shim and doesn't support 'null' as the first argument.");
+            throw new Error('This browser\'s implementation of Object.create is a shim and doesn\'t support \'null\' as the first argument.');
         }
 
         if (typeof propertiesObject != 'undefined') {
-            throw new Error("This browser's implementation of Object.create is a shim and doesn't support a second argument.");
+            throw new Error('This browser\'s implementation of Object.create is a shim and doesn\'t support a second argument.');
         }
 
         function F() {}
