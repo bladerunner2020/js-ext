@@ -1,9 +1,9 @@
 {
   "name": "js-ext",
-  "version": "1.18.2",
+  "version": "1.18.3",
   "description": "",
   "private": true,
-  "main": "index.js",
+  "main": "js-ext.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
