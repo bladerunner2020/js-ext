@@ -27,6 +27,36 @@ if (typeof IR != 'undefined') {
     };
 
     // eslint-disable-next-line no-unused-vars
+    var irAddListener = function() {
+        if (typeof _DEBUGGER !== 'undefined') {
+            if (typeof _DEBUGGER.addListenerCount === 'undefined') {
+                _DEBUGGER.addListenerCount = 0;
+            }
+        }
+
+        var result = undefined;
+
+        try {
+            result = IR.AddListener.apply(undefined, arguments);
+            if (typeof _DEBUGGER != 'undefined') {
+                _DEBUGGER.addListenerCount++;
+            }
+        } catch (e) {
+            var counterStr = typeof _DEBUGGER != 'undefined' ? '(' + _DEBUGGER.addListenerCount + ')' : '';
+            if (typeof _Error !== 'undefined') {
+                _Error('CRITICAL ERROR - AddListener failed ' + counterStr + ': '  + e.message);
+            } else {
+                e.message = 'AddListener failed ' + counterStr + ': '  + e.message;
+            }
+
+            throw e;
+        }
+
+
+        return result;
+    };
+
+    // eslint-disable-next-line no-unused-vars
     var setTimeout = function(cb, timeout){
         var timer = 0;
 
@@ -57,8 +87,9 @@ if (typeof IR != 'undefined') {
                 _Error('CRITICAL ERROR - setTimeout(' + name + ', ' + timeout + ') failed ' + counterStr + ': '  + e.message);
             } else {
                 e.message = 'setTimeout(' + name + ', ' + timeout + ') failed ' + counterStr + ': '  + e.message;
-                throw e;
             }
+
+            throw e;
         }
 
         return timer;
@@ -102,8 +133,9 @@ if (typeof IR != 'undefined') {
 
             } else {
                 e.message = 'setInterval(' + name + ', ' + interval + ') failed ' + counterStr + ': '  + e.message;
-                throw e;
             }
+
+            throw e;
         }
 
 
