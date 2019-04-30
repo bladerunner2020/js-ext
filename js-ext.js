@@ -67,7 +67,7 @@ if (typeof IR != 'undefined') {
         }
 
         try {
-            timer = IR.SetTimeout(timeout, cb);
+            timer = IR.SetTimeout(timeout >= 0 ? timeout : 0, cb);
             if (typeof _DEBUGGER != 'undefined') {
                 _DEBUGGER.setTimeoutCounter++;
             }
@@ -111,7 +111,7 @@ if (typeof IR != 'undefined') {
         }
 
         try {
-            timer = IR.SetInterval(interval, cb);
+            timer = IR.SetInterval(interval >= 0 ? interval : 0, cb);
             if (typeof _DEBUGGER != 'undefined') {
                 _DEBUGGER.setIntervalCounter++;
             }
