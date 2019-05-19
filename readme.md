@@ -29,6 +29,7 @@ npm install https://github.com/bladerunner2020/js-ext.git --save
 - Array.prototype.forEach
 - Array.isArray
 - Array.prototype.map
+- Array.prototype.filter
 
 **String**
 - String.prototype.trim
