@@ -28,6 +28,11 @@ testArray.forEach(function (item) {
 });
 console.log(s);
 
+IR = {};
+
+const jsExtEscape = require('../js-ext');
+console.log('done');
+
 
 
 

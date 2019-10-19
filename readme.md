@@ -53,6 +53,7 @@ npm install https://github.com/bladerunner2020/js-ext.git --save
 
 **Function**
 - Function.prototype.bind - [Source](https://github.com/Raynos/function-bind)
+- encode
 
 **Object**
 - Object.keys - [Source](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/keys)
@@ -88,6 +89,9 @@ if ((typeof IR === 'object') && (typeof module === 'object')) {
     exports = null;
 }
 ```
+
+## История изменений
+* v1.20.0 - Добавлена функция **escape**
 
 ## Авторы
 

@@ -4,8 +4,8 @@
 if (typeof IR != 'undefined') {
     if (typeof module !== 'object') {
         var module = {};
-        module.exports = {};  // Do we need this?
     }
+    module.exports = {};
     
     if (typeof require == 'undefined') {
         var require = function(name) {
@@ -55,6 +55,29 @@ if (typeof IR != 'undefined') {
 
         return result;
     };
+
+    // escape implementation
+    var _jsExtEscape = function(source) {
+        source = '' + source;   // convet ToString()
+        return source
+            .split('')
+            .map(function(ch) {
+                var code = ch.charCodeAt(0);
+                if ('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@*_+-./'.indexOf(ch) !== -1) {
+                    return ch;
+                } else if (code > 256) {
+                    return '%u' + ('0000' + code.toString(16).toUpperCase()).slice(-4);
+                }
+                return '%' + ('00' + code.toString(16).toUpperCase()).slice(-2);
+            })
+            .join('');
+    };
+    module.exports.escape = _jsExtEscape;   // for jest tests
+
+    if (typeof escape === 'undefined') {
+        var escape = _jsExtEscape;
+    }
+    // end of escape implementation
 
     // eslint-disable-next-line no-unused-vars
     var setTimeout = function(cb, timeout){
