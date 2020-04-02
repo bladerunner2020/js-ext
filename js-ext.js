@@ -485,7 +485,7 @@ if (!Array.prototype.map) {
             T = thisArg;
         }
   
-        // 6. Положим A равным новому масиву, как если бы он был создан выражением new Array(len),
+        // 6. Положим A равным новому массиву, как если бы он был создан выражением new Array(len),
         //    где Array является стандартным встроенным конструктором с этим именем,
         //    а len является значением len.
         A = new Array(len);
@@ -615,6 +615,9 @@ if (!JSON.parse) {
         }
 
         function replaceCRLF(obj, rCR, rLF) {
+            if (!obj) {
+                return obj;
+            }
             for (var n in obj) {
                 if (obj.hasOwnProperty(n)) {
                     var property = obj[n];
