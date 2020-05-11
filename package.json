@@ -21,8 +21,5 @@
     "jest-date-mock": "^1.0.7"
   },
   "dependencies": {
-    "actions": "git+ssh://git@gitlab.com:general-modules/actions.git",
-    "calendar_event": "git+ssh://git@gitlab.com:general-modules/calendar_event.git",
-    "event-handler": "git+ssh://git@gitlab.com/general-modules/event-handler.git"
   }
 }
