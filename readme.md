@@ -58,6 +58,7 @@ npm install https://github.com/bladerunner2020/js-ext.git --save
 **Object**
 - Object.keys - [Source](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/keys)
 - Object.create
+- Object.assign
 
 **Console**
 - console.log - вместо IR.Log
@@ -91,6 +92,7 @@ if ((typeof IR === 'object') && (typeof module === 'object')) {
 ```
 
 ## История изменений
+* v1.22.0 - Добавлена функция **Object.assing**
 * v1.20.0 - Добавлена функция **escape**
 
 ## Авторы

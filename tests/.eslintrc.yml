@@ -1,0 +1,21 @@
+env:
+  commonjs: true
+  es6: true
+  node: true
+  jest: true
+extends:
+  - airbnb-base
+globals:
+  Atomics: readonly
+  SharedArrayBuffer: readonly
+  IR: writable
+parserOptions:
+  ecmaVersion: 2018
+rules:
+  func-names: ["error", "as-needed"]
+  space-before-function-paren: ["error", "never"]
+  max-len: ["error", 120]
+  no-underscore-dangle: 0
+  no-plusplus: ["error", {"allowForLoopAfterthoughts": true}]
+  import/no-unresolved: [2, { ignore: ["^meteor/"] }]
+  comma-dangle: ["error", "only-multiline"]
