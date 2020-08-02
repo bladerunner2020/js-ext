@@ -526,21 +526,28 @@ function mergeByProperty(arr1, arr2, prop) {
   });
 }
 
-if (!JSON.parse) {
+if (typeof JSON.parse === 'undefined') {
   JSON.parse = JSON.Parse;
 }
 
-if (!JSON.stringify) {
+if (typeof JSON.stringify === 'undefined') {
   JSON.stringify = JSON.Stringify;
 }
 
-if (!Number.isInteger) {
-  Number.isInteger = Number.isInteger || function(value) {
+if (typeof Number.isInteger === 'undefined') {
+  Number.isInteger = function(value) {
     return typeof value === 'number' &&
       Number.isFinite(value) &&
       Math.floor(value) === value;
   };
 }
+
+if (typeof Number.isNaN === 'undefined') {
+  if (typeof isNaN !== 'undefined') {
+    Number.isNaN = isNaN;
+  }
+}
+
 
 // https://github.com/Raynos/function-bind
 if (!Function.prototype.bind) {
