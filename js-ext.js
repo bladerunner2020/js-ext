@@ -534,6 +534,12 @@ if (typeof JSON.stringify === 'undefined') {
   JSON.stringify = JSON.Stringify;
 }
 
+if (typeof Number.isFinite === 'undefined') {
+  if (typeof isFinite !== 'undefined') {
+    Number.isFinite = isFinite;
+  }
+}
+
 if (typeof Number.isInteger === 'undefined') {
   Number.isInteger = function(value) {
     return typeof value === 'number' &&

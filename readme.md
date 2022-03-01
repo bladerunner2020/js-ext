@@ -50,6 +50,7 @@ npm install https://github.com/bladerunner2020/js-ext.git --save
 
 **Number**
 - Number.isInteger
+- Number.isFinite
 - Number.isNaN
 
 
@@ -94,6 +95,7 @@ if ((typeof IR === 'object') && (typeof module === 'object')) {
 ```
 
 ## История изменений
+* v1.22.2 - Добавлена функция **Number.isFinite**
 * v1.22.1 - Добавлена функция **Number.isNaN**
 * v1.22.0 - Добавлена функция **Object.assing**
 * v1.20.0 - Добавлена функция **escape**
