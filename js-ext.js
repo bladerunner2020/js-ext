@@ -1,58 +1,17 @@
 // js-ext.js
 
-if (typeof IR != 'undefined') {
+if (typeof IR !== 'undefined') {
+  // Для тестирования в JEST мы делаем экспорт функций через module.exports
+  // В проектах iridium просто появится переменная module. 
   if (typeof module !== 'object') {
     var module = {};
   }
   module.exports = {};
 
-  if (typeof require == 'undefined') {
-    var require = function(name) {
-      var res = module[name] ? module[name] : null;
-
-      if (res && res.moduleInitializer) {
-        res = res.moduleInitializer();
-      }
-
-      return res;
-    };
-  }
-
-
   // В iridium не корректно работает slice без аргументов
   var _old_slice = Array.prototype.slice;
   Array.prototype.slice = function() {
     return arguments.length ? _old_slice.apply(this, arguments) : _old_slice.apply(this, [0]);
-  };
-
-  // eslint-disable-next-line no-unused-vars
-  var irAddListener = function() {
-    if (typeof _DEBUGGER !== 'undefined') {
-      if (typeof _DEBUGGER.addListenerCount === 'undefined') {
-        _DEBUGGER.addListenerCount = 0;
-      }
-    }
-
-    var result = undefined;
-
-    try {
-      result = IR.AddListener.apply(undefined, arguments);
-      if (typeof _DEBUGGER != 'undefined') {
-        _DEBUGGER.addListenerCount++;
-      }
-    } catch (e) {
-      var counterStr = typeof _DEBUGGER != 'undefined' ? '(' + _DEBUGGER.addListenerCount + ')' : '';
-      if (typeof _Error !== 'undefined') {
-        _Error('CRITICAL ERROR - AddListener failed ' + counterStr + ': ' + e.message);
-      } else {
-        e.message = 'AddListener failed ' + counterStr + ': ' + e.message;
-      }
-
-      throw e;
-    }
-
-
-    return result;
   };
 
   // escape implementation
@@ -72,34 +31,112 @@ if (typeof IR != 'undefined') {
       .join('');
   };
   module.exports.escape = _jsExtEscape; // for jest tests
-
   if (typeof escape === 'undefined') {
     var escape = _jsExtEscape;
   }
-  // end of escape implementation
 
+  // setTimeout
   var setTimeout = function(cb, timeout) {
     return IR.SetTimeout(timeout >= 0 ? timeout : 0, cb);
   };
 
+  // clearTimeout
   var clearTimeout = function(timer) {
     return IR.ClearTimeout(timer);
   };
 
+  // setInterval
   var setInterval = function(cb, interval) {
     return IR.SetInterval(interval >= 0 ? interval : 0, cb);
   };
 
+  // clearInterval
   var clearInterval = function(timer) {
     return IR.ClearInterval(timer);
   };
 
+  // console.log
+  (function(){
+    function JsExtLogger(cb) {
+      var reg = /[\\'\u0000-\u001f]/g;
+      function rep(c){
+        switch(c){
+          case "'": return "\\'";
+          case '\\': return "\\\\";
+          case '\b': return "\\b";
+          case '\t': return "\\t";
+          case '\n': return "\\n";
+          case '\f': return "\\f";
+          case '\r': return "\\r";
+        }
+        c = c.charCodeAt(0);
+        return (c<16?'\\u000':'\\u00')+c.toString(16);
+      };
+      function key(v,d){
+        switch(typeof v){
+          case 'number': return ''+v;
+          case 'string': return "'"+v.replace(reg,rep)+"'";
+          case 'object': return v?obj(v,d):'null';
+          case 'function': return v.name?'[Function: '+v.name+']':'[Function]';
+          case 'undefined': return 'undefined';
+          case 'boolean': return v?'true':'false';
+        }
+        return ''+v;
+      };
+      var circ = [];
+      function obj(v,d){
+        for(var i=0,m=circ.length; i<m; i++){
+          if(circ[i]===v){
+            return '[Circular]';
+          }
+        }
+        d += '  ';
+        var s = '';
+        if(v instanceof Array){
+          circ.push(v);
+          for(var i=0,m=v.length; i<m; i++){
+            s += (s===''?'[ ':', ')+'\n'+d+key(v[i],d);
+          }
+          circ.pop();
+          return s===''?'[]':(s+' ]');
+        }
+        var n = '';
+        if((typeof v.toString)==='function'){
+          n = v.toString();
+          if(n==='[object Object]'){
+            n = '';
+          }
+        }
+        circ.push(v);
+        var alpha = /^[a-z_][a-z_0-9]*$/i;
+        for(var k in v){
+          if(Object.prototype.hasOwnProperty.call(v,k)){
+            s += (s===''?'{ ':', ')+'\n'+d+(k.match(alpha)?k:key(k))+': '+key(v[k],d);
+          }
+        }
+        circ.pop(v);
+        return s===''?(n||'{}'):(s+' }');
+      };
+      function one(v){
+        return (typeof v)==='string'?v:key(v,'');
+      }
+      return function log(params_){
+        var a=arguments, n=a.length, s='', i=0;
+        for(var i=0; i<n; i++){
+          s += one(a[i])+' ';
+        }
+        return cb(s);
+      };
+    };
 
-  // Если в коде встречается где-нибудь console.log
-  if (!console) {
-    var console = {};
-    console.log = IR.Log;
-  }
+    if (typeof console === 'undefined') {
+      console = {};
+      console.log = new JsExtLogger(IR.Log);
+      console.error = console.log
+    }
+
+    module.exports.JsExtLogger = JsExtLogger;
+  })();
 }
 
 

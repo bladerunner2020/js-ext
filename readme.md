@@ -35,24 +35,20 @@ npm install https://github.com/bladerunner2020/js-ext.git --save
 - String.prototype.trim
 - String.prototype.repeat
 
-
 **Date**
 - Date.now
 - Date.prototype.toISOString - [Source](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toISOString)
 - Date.prototype.parse - [Source](https://stackoverflow.com/questions/5802461/javascript-which-browsers-support-parsing-of-iso-8601-date-string-with-date-par)
-
 
 **JSON**
 - JSON.parse - вместо *JSON.Parse* + корректная работа, если в строках есть символы **\r** или **\n**. Это отличается от стандарта JS,
 но, в *Node JS* JSON.parse корректно работает с этими символами.
 - JSON.stringify - вместо *JSON.Stringify*
 
-
 **Number**
 - Number.isInteger
 - Number.isFinite
 - Number.isNaN
-
 
 **Function**
 - Function.prototype.bind - [Source](https://github.com/Raynos/function-bind)
@@ -65,6 +61,7 @@ npm install https://github.com/bladerunner2020/js-ext.git --save
 
 **Console**
 - console.log - вместо IR.Log
+- console.error - идентичен console.log
 
 **Таймеры**
 - setTimeout - вместо *IR.SetTimeout* (**NOTE**: в *setTimeout* стандартное расположение аргументов для js)
@@ -72,40 +69,20 @@ npm install https://github.com/bladerunner2020/js-ext.git --save
 - clearTimeout - вместо *IR.ClearTimeout*
 - clearInterval - вместо *IRClearInterval*
 
-
-**Работа с модулями**
-- require - некоторая (спорная) попытка добавить в iRidium возможность работы с модулями. Это даже близко не полноценная замена
-стандартной функции **require**. Ее можно использовать для создания кода совместимого с другими платформами. Для того чтобы
-**require** работала корректно модуль должен быть оформлен соответствующим образом:
-
-Пример:
-```javascript
-if (typeof IR === 'object') {
-    var exports = {};
-}
-
-exports.someobject = someobject;
-// ...
-
-// Necessary to use in IridiumMobile
-if ((typeof IR === 'object') && (typeof module === 'object')) {
-    module['module-name'] = exports;
-    exports = null;
-}
-```
-
 ## История изменений
+* v1.23.0 - Переработана функция **console.log**, удалена работа с модулями (**require**)
 * v1.22.2 - Добавлена функция **Number.isFinite**
 * v1.22.1 - Добавлена функция **Number.isNaN**
 * v1.22.0 - Добавлена функция **Object.assing**
 * v1.20.0 - Добавлена функция **escape**
 
-## Авторы
+## Авторы и контрибуторы
 
 * Александр Пивоваров aka Bladerunner2020 ([pivovarov@gmail.com](mailto:pivovarov@gmail.com))
+* Анонимный автор из телеграм-группы Iridium devs (реализация console.log)
 
 ## Лицензия
-Copyright (c) 2018-2020 Александр Пивоваров
+Copyright (c) 2018-2022 Александр Пивоваров
 
 Данная лицензия разрешает лицам, получившим копию данного программного обеспечения и сопутствующей документации (в дальнейшем именуемыми «Программное Обеспечение»), безвозмездно использовать Программное Обеспечение без ограничений, включая неограниченное право на использование, копирование, изменение, слияние, публикацию, распространение, сублицензирование и/или продажу копий Программного Обеспечения, а также лицам, которым предоставляется данное Программное Обеспечение, при соблюдении следующих условий:
 
