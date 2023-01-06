@@ -263,7 +263,6 @@ if (!Array.prototype.filter) {
 // Ссылка (en): http://es5.github.io/#x15.4.4.14
 // Ссылка (ru): http://es5.javascript.ru/x15.4.html#x15.4.4.14
 if (!Array.prototype.indexOf) {
-
   Array.prototype.indexOf = function(searchElement, fromIndex) {
     var k;
 
@@ -323,6 +322,12 @@ if (!Array.prototype.indexOf) {
       k++;
     }
     return -1;
+  };
+}
+
+if (!Array.prototype.includes) {
+  Array.prototype.includes = function(searchElement, fromIndex) {
+    return this.indexOf(searchElement, fromIndex) !== -1;
   };
 }
 

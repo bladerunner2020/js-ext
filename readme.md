@@ -30,6 +30,7 @@ npm install https://github.com/bladerunner2020/js-ext.git --save
 - Array.isArray
 - Array.prototype.map
 - Array.prototype.filter
+- Array.prototype.includes
 
 **String**
 - String.prototype.trim
@@ -70,6 +71,7 @@ npm install https://github.com/bladerunner2020/js-ext.git --save
 - clearInterval - вместо *IRClearInterval*
 
 ## История изменений
+* v1.24.0 - Добавлена функция **Array.prototype.includes** (плюс тесты)
 * v1.23.0 - Переработана функция **console.log**, удалена работа с модулями (**require**)
 * v1.22.2 - Добавлена функция **Number.isFinite**
 * v1.22.1 - Добавлена функция **Number.isNaN**
@@ -79,10 +81,10 @@ npm install https://github.com/bladerunner2020/js-ext.git --save
 ## Авторы и контрибуторы
 
 * Александр Пивоваров aka Bladerunner2020 ([pivovarov@gmail.com](mailto:pivovarov@gmail.com))
-* Анонимный автор из телеграм-группы Iridium devs (реализация console.log)
+* Анонимный автор из телеграм-группы [Iridium Devs](https://t.me/joinchat/ACv_8w0_68dXUQ0M0pTbPg) (реализация console.log)
 
 ## Лицензия
-Copyright (c) 2018-2022 Александр Пивоваров
+Copyright (c) 2018-2023 Александр Пивоваров
 
 Данная лицензия разрешает лицам, получившим копию данного программного обеспечения и сопутствующей документации (в дальнейшем именуемыми «Программное Обеспечение»), безвозмездно использовать Программное Обеспечение без ограничений, включая неограниченное право на использование, копирование, изменение, слияние, публикацию, распространение, сублицензирование и/или продажу копий Программного Обеспечения, а также лицам, которым предоставляется данное Программное Обеспечение, при соблюдении следующих условий:
 
