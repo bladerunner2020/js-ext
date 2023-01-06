@@ -9,15 +9,15 @@
   },
   "keywords": [],
   "author": "Alexander Pivovarov aka bladerunner2020 (pivovarov@gmail.com)",
-  "license": "ISC",
+  "license": "MIT",
   "devDependencies": {
-    "@babel/core": "^7.4.4",
-    "@babel/preset-env": "^7.4.4",
-    "babel-jest": "^24.7.1",
-    "eslint": "^8.23.0",
+    "@babel/core": "^7.20.12",
+    "@babel/preset-env": "^7.20.2",
+    "babel-jest": "^29.3.1",
+    "eslint": "^8.31.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-import": "^2.26.0",
-    "jest": "^24.7.1",
-    "jest-date-mock": "^1.0.7"
+    "jest": "^29.3.1",
+    "jest-date-mock": "^1.0.8"
   }
 }
